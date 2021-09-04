@@ -79,36 +79,47 @@ public class WebhookListener extends Thread {
                 return;
             }
 
-            if(!element.isJsonObject()) {
+            if(element == null || !element.isJsonObject()) {
                 System.err.println("Element is not JsonObject: " + element);
                 return;
             }
 
-            JsonObject o = element.getAsJsonObject();
-            boolean bot = o.get("bot") != null && !o.get("bot").isJsonNull();
+            try {
+                JsonObject o = element.getAsJsonObject();
+                boolean bot = o.get("bot") != null && !o.get("bot").isJsonNull();
 
-            if(bot) {
-                handleBotHook(
-                        o.get("bot").getAsLong(),
-                        o.get("user").getAsLong(),
-                        o.get("type").getAsString(),
-                        o.get("isWeekend").getAsBoolean(),
-                        o.get("query?").getAsString()
-                );
-            } else {
-                handleServerHook(
-                        o.get("bot").getAsLong(),
-                        o.get("user").getAsLong(),
-                        o.get("type").getAsString(),
-                        o.get("query?").getAsString()
-                );
+                String query = "";
+
+                if(o.get("query?") != null && !o.get("query?").isJsonNull()) {
+                    query = o.get("query?").getAsString();
+                }
+
+                if(bot) {
+                    handleBotHook(
+                            o.get("bot").getAsLong(),
+                            o.get("user").getAsLong(),
+                            o.get("type").getAsString(),
+                            o.get("isWeekend").getAsBoolean(),
+                            query
+                    );
+                } else {
+                    handleServerHook(
+                            o.get("bot").getAsLong(),
+                            o.get("user").getAsLong(),
+                            o.get("type").getAsString(),
+                            query
+                    );
+                }
+
+                String response = "Ok!";
+                exchange.sendResponseHeaders(200, response.length());
+                OutputStream os = exchange.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
-
-            String response = "Ok!";
-            exchange.sendResponseHeaders(200, response.length());
-            OutputStream os = exchange.getResponseBody();
-            os.write(response.getBytes());
-            os.close();
         });
 
     }
@@ -123,6 +134,10 @@ public class WebhookListener extends Thread {
 
     public void setSecret(String secret) {
         this.secret = secret;
+    }
+
+    public void addWhitelisted(String address) {
+        whitelist.add(address);
     }
 
     public void setWhitelist(boolean enabled) {
