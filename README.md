@@ -26,6 +26,8 @@ To handle a Bot Webhook, override the Method `handleBotHook`. This Method will b
 To handle a Server Webhook, override the Method `handleServerHook`. This Method will be called if someone Votes for your Server.
 
 For the last step, add your Address with your Path to your Bot or Server Webhook Page. You can edit your Webhook for your Bot at `https://top.gg/bot/<bot id>/webhooks`.
-Replace `yourAddressHere` with your IP Address from your Server. The `yourPathHere` is the Path, you set at the Listener Constructor.
+Replace `yourAddressHere` with your IP Address and Port from your Server. The `yourPathHere` is the Path, you set at the Listener Constructor.
 You can leave the `YourSecretTokenHere` empty or set the Same Token in your Listener using `setSecret()`.
 ![image](https://user-images.githubusercontent.com/55353244/132097412-8c92421a-5587-4ade-96dc-2e78b1579101.png)
+
+Your router must share your IP address and the port of your server. Please check either to always assign the same IP address or to use a DynDNS provider.
