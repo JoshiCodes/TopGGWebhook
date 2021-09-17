@@ -147,6 +147,10 @@ public class WebhookListener extends Thread {
             whitelist = null;
     }
 
+    public HttpServer getServer() {
+        return server;
+    }
+
     public String getSecret() {
         return secret;
     }
