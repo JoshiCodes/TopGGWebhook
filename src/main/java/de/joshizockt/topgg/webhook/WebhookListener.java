@@ -99,7 +99,7 @@ public class WebhookListener extends Thread {
                             o.get("bot").getAsLong(),
                             o.get("user").getAsLong(),
                             o.get("type").getAsString(),
-                            o.get("isWeekend").getAsBoolean(),
+                            (o.get("isWeekend") != null && o.get("isWeekend").isJsonPrimitive() && o.get("isWeekend").getAsBoolean()),
                             query
                     );
                 } else {
